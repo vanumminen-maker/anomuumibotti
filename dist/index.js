@@ -81,7 +81,7 @@ client.on(discord_js_1.Events.InteractionCreate, async (interaction) => {
             }
         }
         else if (interaction.isButton()) {
-            if (interaction.customId.startsWith('poll_vote_')) {
+            if (interaction.customId.startsWith('poll:vote:')) {
                 await (0, polli_1.handlePollButtonInteraction)(interaction);
             }
         }

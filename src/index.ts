@@ -52,7 +52,7 @@ client.on(Events.InteractionCreate, async interaction => {
                 await handleLog(interaction);
             }
         } else if (interaction.isButton()) {
-            if (interaction.customId.startsWith('poll_vote_')) {
+            if (interaction.customId.startsWith('poll:vote:')) {
                 await handlePollButtonInteraction(interaction);
             }
         }
