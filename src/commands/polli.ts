@@ -51,7 +51,7 @@ export async function handlePolli(interaction: ChatInputCommandInteraction) {
             const actualIndex = i + index;
             row.addComponents(
                 new ButtonBuilder()
-                    .setCustomId(`poll_vote_${pollId}_${actualIndex}`)
+                    .setCustomId(`poll:vote:${pollId}:${actualIndex}`)
                     .setLabel(`${actualIndex + 1}`)
                     .setStyle(ButtonStyle.Primary)
             );
@@ -61,13 +61,18 @@ export async function handlePolli(interaction: ChatInputCommandInteraction) {
 
     const message = await interaction.reply({ embeds: [embed], components: rows, fetchReply: true });
 
-    db.prepare('INSERT INTO polls (id, message_id, channel_id, question, options_json, expires_at) VALUES (?, ?, ?, ?, ?, ?)').run(
-        pollId, message.id, interaction.channelId, kysymys, JSON.stringify(options), expiration
-    );
+    try {
+        db.prepare('INSERT INTO polls (id, message_id, channel_id, question, options_json, expires_at) VALUES (?, ?, ?, ?, ?, ?)').run(
+            pollId, message.id, interaction.channelId, kysymys, JSON.stringify(options), expiration
+        );
+    } catch (e) {
+        console.error("Virhe tallennuksessa:", e);
+        await interaction.followUp({ content: "Varoitus: Äänestyksen tallentaminen tietokantaan epäonnistui. Tämä johtuu todennäköisesti luku/kirjoitusoikeuksista.", ephemeral: true });
+    }
 }
 
 export async function handlePollButtonInteraction(interaction: ButtonInteraction) {
-    const parts = interaction.customId.split('_');
+    const parts = interaction.customId.split(':');
     const pollId = parts[2];
     const optionIndex = parseInt(parts[3], 10);
     

@@ -47,17 +47,23 @@ async function handlePolli(interaction) {
         chunk.forEach((_, index) => {
             const actualIndex = i + index;
             row.addComponents(new discord_js_1.ButtonBuilder()
-                .setCustomId(`poll_vote_${pollId}_${actualIndex}`)
+                .setCustomId(`poll:vote:${pollId}:${actualIndex}`)
                 .setLabel(`${actualIndex + 1}`)
                 .setStyle(discord_js_1.ButtonStyle.Primary));
         });
         rows.push(row);
     }
     const message = await interaction.reply({ embeds: [embed], components: rows, fetchReply: true });
-    db_1.db.prepare('INSERT INTO polls (id, message_id, channel_id, question, options_json, expires_at) VALUES (?, ?, ?, ?, ?, ?)').run(pollId, message.id, interaction.channelId, kysymys, JSON.stringify(options), expiration);
+    try {
+        db_1.db.prepare('INSERT INTO polls (id, message_id, channel_id, question, options_json, expires_at) VALUES (?, ?, ?, ?, ?, ?)').run(pollId, message.id, interaction.channelId, kysymys, JSON.stringify(options), expiration);
+    }
+    catch (e) {
+        console.error("Virhe tallennuksessa:", e);
+        await interaction.followUp({ content: "Varoitus: Äänestyksen tallentaminen tietokantaan epäonnistui. Tämä johtuu todennäköisesti luku/kirjoitusoikeuksista.", ephemeral: true });
+    }
 }
 async function handlePollButtonInteraction(interaction) {
-    const parts = interaction.customId.split('_');
+    const parts = interaction.customId.split(':');
     const pollId = parts[2];
     const optionIndex = parseInt(parts[3], 10);
     const poll = db_1.db.prepare('SELECT * FROM polls WHERE id = ? AND active = 1').get(pollId);
