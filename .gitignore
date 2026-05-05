@@ -1,0 +1,70 @@
+# =========================
+#  DISCORD BOT PROTECTION
+# =========================
+
+# NEVER upload your real bot config
+config.yml
+
+# Allow example/template config
+config.example.yml
+
+# =========================
+#  NODE / JAVASCRIPT
+# =========================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+build/
+.cache/
+.temp/
+
+# =========================
+#  ENVIRONMENT FILES
+# =========================
+
+.env
+.env.local
+.env.development
+.env.production
+
+# =========================
+#  OS / EDITOR FILES
+# =========================
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Mac
+.DS_Store
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# JetBrains
+.idea/
+
+# =========================
+#  LOGS / DATABASE
+# =========================
+
+logs/
+*.log
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# =========================
+#  BACKUPS / MISC
+# =========================
+
+*.bak
+*.tmp
+*.swp
+*.zip
