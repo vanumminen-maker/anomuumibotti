@@ -38,6 +38,7 @@ const dotenv = __importStar(require("dotenv"));
 const anonyymi_1 = require("./commands/anonyymi");
 const polli_1 = require("./commands/polli");
 const ohje_1 = require("./commands/ohje");
+const log_1 = require("./commands/log");
 const db_1 = require("./db");
 // Ladataan .env paikallisessa testauksessa. Railwayssa käytetään suoraan environment variables.
 dotenv.config();
@@ -54,7 +55,7 @@ client.once(discord_js_1.Events.ClientReady, async (readyClient) => {
     const rest = new discord_js_1.REST().setToken(TOKEN);
     try {
         console.log('Päivitetään kauttaviivakomennot (slash commands)...');
-        await rest.put(discord_js_1.Routes.applicationCommands(readyClient.user.id), { body: [anonyymi_1.anonyymiCommandData, polli_1.polliCommandData, ohje_1.ohjeCommandData] });
+        await rest.put(discord_js_1.Routes.applicationCommands(readyClient.user.id), { body: [anonyymi_1.anonyymiCommandData, polli_1.polliCommandData, ohje_1.ohjeCommandData, log_1.logCommandData] });
         console.log('Komennot päivitetty onnistuneesti.');
     }
     catch (error) {
@@ -74,6 +75,9 @@ client.on(discord_js_1.Events.InteractionCreate, async (interaction) => {
             }
             else if (interaction.commandName === 'ohje') {
                 await (0, ohje_1.handleOhje)(interaction);
+            }
+            else if (interaction.commandName === 'log') {
+                await (0, log_1.handleLog)(interaction);
             }
         }
         else if (interaction.isButton()) {

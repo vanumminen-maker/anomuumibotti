@@ -27,6 +27,16 @@ db.exec(`
   );
 `);
 
+db.exec(`
+  CREATE TABLE IF NOT EXISTS logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT NOT NULL,
+    action TEXT NOT NULL,
+    content TEXT NOT NULL,
+    timestamp INTEGER NOT NULL
+  );
+`);
+
 export function deactivatePoll(id: string) {
     db.prepare('UPDATE polls SET active = 0 WHERE id = ?').run(id);
 }

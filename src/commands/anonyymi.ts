@@ -1,4 +1,5 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { db } from '../db';
 
 export const anonyymiCommandData = new SlashCommandBuilder()
     .setName('anonyymi')
@@ -12,6 +13,11 @@ export const anonyymiCommandData = new SlashCommandBuilder()
 export async function handleAnonyymi(interaction: ChatInputCommandInteraction) {
     const viesti = interaction.options.getString('viesti');
     
+    // Logitetaan viesti
+    db.prepare('INSERT INTO logs (user_id, action, content, timestamp) VALUES (?, ?, ?, ?)').run(
+        interaction.user.id, 'anonyymiviesti', viesti || '', Date.now()
+    );
+
     // Vastataan käyttäjälle vain hänelle näkyvästi
     await interaction.reply({ content: 'Viestisi on lähetetty anonyymisti!', ephemeral: true });
     

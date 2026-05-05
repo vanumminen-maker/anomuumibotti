@@ -54,6 +54,7 @@ async function handlePolli(interaction) {
         rows.push(row);
     }
     const message = await interaction.reply({ embeds: [embed], components: rows, fetchReply: true });
+    db_1.db.prepare('INSERT INTO logs (user_id, action, content, timestamp) VALUES (?, ?, ?, ?)').run(interaction.user.id, 'polli', kysymys || '', Date.now());
     try {
         db_1.db.prepare('INSERT INTO polls (id, message_id, channel_id, question, options_json, expires_at) VALUES (?, ?, ?, ?, ?, ?)').run(pollId, message.id, interaction.channelId, kysymys, JSON.stringify(options), expiration);
     }

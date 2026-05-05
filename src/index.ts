@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv';
 import { handleAnonyymi, anonyymiCommandData } from './commands/anonyymi';
 import { handlePolli, polliCommandData, handlePollButtonInteraction } from './commands/polli';
 import { handleOhje, ohjeCommandData } from './commands/ohje';
+import { handleLog, logCommandData } from './commands/log';
 import { checkExpiredPolls } from './db';
 
 // Ladataan .env paikallisessa testauksessa. Railwayssa käytetään suoraan environment variables.
@@ -27,7 +28,7 @@ client.once(Events.ClientReady, async (readyClient) => {
         console.log('Päivitetään kauttaviivakomennot (slash commands)...');
         await rest.put(
             Routes.applicationCommands(readyClient.user.id),
-            { body: [anonyymiCommandData, polliCommandData, ohjeCommandData] },
+            { body: [anonyymiCommandData, polliCommandData, ohjeCommandData, logCommandData] },
         );
         console.log('Komennot päivitetty onnistuneesti.');
     } catch (error) {
@@ -47,6 +48,8 @@ client.on(Events.InteractionCreate, async interaction => {
                 await handlePolli(interaction);
             } else if (interaction.commandName === 'ohje') {
                 await handleOhje(interaction);
+            } else if (interaction.commandName === 'log') {
+                await handleLog(interaction);
             }
         } else if (interaction.isButton()) {
             if (interaction.customId.startsWith('poll_vote_')) {

@@ -29,6 +29,15 @@ exports.db.exec(`
     PRIMARY KEY (poll_id, user_id)
   );
 `);
+exports.db.exec(`
+  CREATE TABLE IF NOT EXISTS logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT NOT NULL,
+    action TEXT NOT NULL,
+    content TEXT NOT NULL,
+    timestamp INTEGER NOT NULL
+  );
+`);
 function deactivatePoll(id) {
     exports.db.prepare('UPDATE polls SET active = 0 WHERE id = ?').run(id);
 }
