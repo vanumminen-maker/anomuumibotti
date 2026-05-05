@@ -10,11 +10,11 @@ exports.polliCommandData = new discord_js_1.SlashCommandBuilder()
     .setName('polli')
     .setDescription('Luo anonyymi äänestys')
     .addStringOption(option => option.setName('kysymys').setDescription('Äänestyksen kysymys').setRequired(true))
-    .addNumberOption(option => option.setName('kesto_tunteina').setDescription('Äänestyksen kesto tunteina (oletus 24h)').setRequired(false))
     .addStringOption(option => option.setName('vaihtoehto1').setDescription('Vaihtoehto 1').setRequired(true))
     .addStringOption(option => option.setName('vaihtoehto2').setDescription('Vaihtoehto 2').setRequired(true))
     .addStringOption(option => option.setName('vaihtoehto3').setDescription('Vaihtoehto 3').setRequired(true))
-    .addStringOption(option => option.setName('vaihtoehto4').setDescription('Vaihtoehto 4').setRequired(true));
+    .addStringOption(option => option.setName('vaihtoehto4').setDescription('Vaihtoehto 4').setRequired(true))
+    .addNumberOption(option => option.setName('kesto_tunteina').setDescription('Äänestyksen kesto tunteina (oletus 24h)').setRequired(false));
 for (let i = 5; i <= 10; i++) {
     exports.polliCommandData.addStringOption(option => option.setName(`vaihtoehto${i}`).setDescription(`Vaihtoehto ${i}`));
 }
