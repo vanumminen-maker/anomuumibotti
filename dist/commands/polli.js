@@ -29,8 +29,6 @@ async function handlePolli(interaction) {
             options.push(val);
     }
     const pollId = (0, nanoid_1.nanoid)(10);
-    // Jos olemme palvelimella tuetussa viestissä, hankitaan viestin kanavatiedot ja lähetetään poll erillisenä, 
-    // tai vastataan interaktioon
     const embed = new discord_js_1.EmbedBuilder()
         .setTitle('📊 ' + kysymys)
         .setDescription(`Anonyymi äänestys.\nAikaa äänestää: **${kesto} tuntia**`)
@@ -53,14 +51,18 @@ async function handlePolli(interaction) {
         });
         rows.push(row);
     }
-    const message = await interaction.reply({ embeds: [embed], components: rows, fetchReply: true });
+    // Kuitataan interaktio hiljaisesti vain käyttäjälle — Discord ei näytä "käyttäjä käytti /polli"
+    await interaction.deferReply({ ephemeral: true });
+    // Lähetetään polliviesti erikseen kanavalle botin nimissä
+    const message = await interaction.channel.send({ embeds: [embed], components: rows });
+    await interaction.editReply({ content: '✅ Äänestys luotu!' });
     db_1.db.prepare('INSERT INTO logs (user_id, action, content, timestamp) VALUES (?, ?, ?, ?)').run(interaction.user.id, 'polli', kysymys || '', Date.now());
     try {
         db_1.db.prepare('INSERT INTO polls (id, message_id, channel_id, question, options_json, expires_at) VALUES (?, ?, ?, ?, ?, ?)').run(pollId, message.id, interaction.channelId, kysymys, JSON.stringify(options), expiration);
     }
     catch (e) {
         console.error("Virhe tallennuksessa:", e);
-        await interaction.followUp({ content: "Varoitus: Äänestyksen tallentaminen tietokantaan epäonnistui. Tämä johtuu todennäköisesti luku/kirjoitusoikeuksista.", ephemeral: true });
+        await interaction.followUp({ content: "Varoitus: Äänestyksen tallentaminen tietokantaan epäonnistui.", ephemeral: true });
     }
 }
 async function handlePollButtonInteraction(interaction) {
