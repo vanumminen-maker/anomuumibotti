@@ -2,9 +2,9 @@
 	"name": "advent",
 	"version": "1.2.0",
 	"description": "Drive up engagement in your server using this advent calendar event bot!",
-	"main": "src/index.ts",
+	"main": "dist/index.js",
 	"scripts": {
-		"build": "echo 'Dist folder already built, skipping...'",
+		"build": "npx tsc",
 		"clean": "node clean.js",
 		"start": "node dist/index.js",
 		"dev": "ts-node src/index.ts",
